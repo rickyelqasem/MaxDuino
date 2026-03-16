@@ -166,6 +166,7 @@
 #include "pinSetup.h"
 #include "USBStorage.h"
 #include "power.h"
+#include "record.h"
 
 #ifdef BLOCK_EEPROM_PUT
 #include "EEPROM_wrappers.h"
@@ -362,11 +363,19 @@ void loop(void) {
     WRITE_LOW;    
   }
   
-  if(start==0 && (strlen(fileName)> SCREENSIZE)) {
-    //Filename scrolling only runs if no file is playing to prevent I2C writes 
-    //conflicting with the playback Interrupt
-    scrollText(fileName, isDir);
-  }
+  #ifdef Use_Rec
+    if(start==0 && !is_recording() && (strlen(fileName)> SCREENSIZE)) {
+      //Filename scrolling only runs if no file is playing to prevent I2C writes
+      //conflicting with the playback Interrupt
+      scrollText(fileName, isDir);
+    }
+  #else
+    if(start==0 && (strlen(fileName)> SCREENSIZE)) {
+      //Filename scrolling only runs if no file is playing to prevent I2C writes
+      //conflicting with the playback Interrupt
+      scrollText(fileName, isDir);
+    }
+  #endif
 
   #ifndef NO_MOTOR
     motorState=digitalRead(btnMotor);
@@ -394,6 +403,56 @@ void loop(void) {
     
   if (millis() - timeDiff > 50) {   // check switch every 50ms 
     timeDiff = millis();           // get current millisecond count
+
+    #ifdef Use_Rec
+      // Recording mode: avoid UI updates (I2C/SPI activity) and focus on SD writes.
+      if (is_recording()) {
+        #ifndef NO_MOTOR
+          if (mselectMask) {
+            if (button_rec() && is_recording_paused()) {
+              resume_recording();
+              oldMotorState = motorState;
+              debounce(button_rec);
+              return;
+            }
+            if (oldMotorState != motorState) {
+              // Motor control works by pulling btnMotor low to run, NC/high to pause.
+              if (motorState == 1 && !is_recording_paused()) {
+                pause_recording();
+              }
+              if (motorState == 0 && is_recording_paused()) {
+                resume_recording();
+              }
+              oldMotorState = motorState;
+            }
+          }
+        #endif
+
+        recording_loop();
+        if (button_stop()) {
+          stop_recording();
+          debounce(button_stop);
+
+        // Refresh UI and return to main browser screen (same behavior as when
+        // the user exits the menu). The new recording file may have changed
+        // the directory contents.
+        getMaxFile();
+        seekFile();
+        printtext(PlayBytes,0);
+        #ifdef LCDSCREEN16x2
+          printtextF(PSTR(""),1);
+        #endif
+        #ifdef OLED1306
+          printtextF(PSTR(""),lineaxy);
+        #endif
+        #ifdef P8544
+          printtextF(PSTR(""),1);
+        #endif
+          scrollText(fileName, isDir, 0);
+        }
+        return;
+      }
+    #endif
 
   #ifdef SOFT_POWER_OFF
     if(start==0)
@@ -435,6 +494,24 @@ void loop(void) {
       
       debounce(button_play);
     }
+
+    #ifdef Use_Rec
+      // Record button (D8 on Nano 4808/4809): only when not playing.
+      if (button_rec() && start==0) {
+        if (start_recording()) {
+          #ifndef NO_MOTOR
+            if (mselectMask) {
+              // Match playback behavior: enter recording paused until motor
+              // control changes, unless the user presses REC again to resume.
+              pause_recording();
+              oldMotorState = 0;
+            }
+          #endif
+        }
+        debounce(button_rec);
+        return;
+      }
+    #endif
 
   #ifdef ONPAUSE_POLCHG
     if(button_root() && start==1 && pauseOn 

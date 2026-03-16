@@ -27,8 +27,14 @@
 #ifdef Use_MZF
   #include "mzf.h"
 #endif
+#ifdef Use_MTX
+  #include "mtx.h"
+#endif
 #ifdef Use_CAQ
   #include "caq.h"
+#endif
+#ifdef Use_c64
+  #include "c64tap.h"
 #endif
 
 //Temporarily store for a pulse period before loading it into the buffer.
@@ -73,7 +79,9 @@ word TickToUs(word ticks) {
 void UniPlay(){
   // initialise scale and period based on current BAUDRATE
   // (although these could be overridden later e.g. during checkForEXT, depending on file type)
-  setBaud();
+  #ifdef Use_CAS
+  setCASBaud();
+  #endif
 
   // on entry, currentFile is already pointing to the file entry you want to play
   // and fileName is already set
@@ -95,8 +103,11 @@ void UniPlay(){
   clearBuffer();
 
   // for CAS/DRAGON:
+#ifdef Use_CAS
   cas_currentType=CAS_TYPE::Nothing;
   fileStage=0;
+#endif
+
   // for TZX/UEF/etc:
   currentBlockTask = BLOCKTASK::READPARAM;    //First block task is to read in parameters
   count_r = 255;                                //End of file buffer flush 
@@ -298,7 +309,6 @@ void PureDataBlock() {
   }
 }
 
-#ifdef DIRECT_RECORDING
 void writeDataDirect() {
   // Push byte from file into the buffer, with minimal processing.
   // One byte (8 bits) from file turns directly into one entry in the buffer
@@ -367,7 +377,7 @@ void writeDataDirect16() {
     writepos+=2;
   }
 }
-#endif
+
 
 void ForcePauseAfter0() {
   pauseOn=true;
@@ -639,7 +649,6 @@ void TZXProcess() {
           }
           break;
 
-    #ifdef DIRECT_RECORDING
       case BLOCKID::ID15:
         //process ID15 - Direct Recording          
         if(currentBlockTask==BLOCKTASK::READPARAM) {
@@ -683,7 +692,7 @@ void TZXProcess() {
             writeDataDirect();
           }
           break;
-      #endif
+
 
         case BLOCKID::ID19:
           //Process ID19 - Generalized data block
@@ -851,17 +860,29 @@ void TZXProcess() {
           currentTask = TASK::GETID;
           break;
 
+      #ifdef Use_CAQ
         case BLOCKID::CAQ:
-          #ifdef Use_CAQ
           caq_process();
-          #endif
           break;
+      #endif
 
+      #ifdef Use_MZF
         case BLOCKID::MZF:
-          #ifdef Use_MZF
           mzf_process();
-          #endif
           break;
+      #endif
+
+      #ifdef Use_MTX
+        case BLOCKID::MTX:
+          mtx_process();
+          break;
+      #endif
+
+      #ifdef Use_c64
+        case BLOCKID::C64TAP:
+          c64tap_process();
+          break;
+      #endif
 
         case BLOCKID::JTAP:
       /*    //Jupiter Tap file block

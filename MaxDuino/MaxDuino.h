@@ -44,6 +44,8 @@ enum BLOCKID
   ID4B = 0x4B,    //Kansas City block (MSX/BBC/Acorn/...)
   ID5A = 0x5A,    //Glue block (90 dec, ASCII Letter 'Z')
   IDPAUSE = 0x80, //Custom Pause processing
+  C64TAP = 0xF4,  //Commodore C64/C16 TAP image
+  MTX = 0xF5,     //Memotech MTX image
   CAQ = 0xF6,     //Mattel Aquarius CAQ cassette image
   MZF = 0xF7,     //Sharp MZ series MZF image (tape PWM)
   JTAP = 0xF8,    //JUPITER ACE Tap File  
@@ -73,6 +75,7 @@ enum class TASK : byte
   PROCESSCHUNKID,
 
   // CAS tasks
+#ifdef Use_CAS
   CAS_lookType,       //looking for file type
   CAS_wHeader,        //Write Header
   CAS_wSilence,       //Write Silence
@@ -82,6 +85,7 @@ enum class TASK : byte
   CAS_wNameFileBlk,   //
   CAS_lookLeader,
   CAS_wNewLeader,
+#endif
 };
 
 enum class BLOCKTASK : byte
@@ -101,6 +105,15 @@ enum class BLOCKTASK : byte
   GAP,
   SYNCLAST,
   NAME00,
+
+#ifdef Use_CAQ
+  // tasks for CAQ processing
+  CAQ_START_BIT,
+  CAQ_DATA_BITS,
+  CAQ_STOP_BIT1,
+  CAQ_STOP_BIT2,
+  CAQ_DONE
+#endif
 };
 
 //Spectrum Standards

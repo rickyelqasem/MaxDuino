@@ -9,9 +9,11 @@
 #define AYPLAY
 #define MenuBLK2A
 #define ID11CDTspeedup
-#define DIRECT_RECORDING
+#define Use_c64                         // Commodore C64/C16 .tap files with native C64-TAPE-RAW/C16-TAPE-RAW headers
+//#define Use_Rec  for atmega 4808/4809
+#define Use_MTX
 #define ZX81SPEEDUP
-//#define Use_MZF
+#define Use_MZF
 #define Use_CAQ
 #define tapORIC
     #define ORICSPEEDUP
@@ -118,7 +120,7 @@
 //#define COMPRESS_REPEAT_ROW
 //#define EEPROM_LOGO_COMPRESS
 //#define LOAD_MEM_LOGO             // legacy, logo is not in EEPROM then wasting memory.
-//#define RECORD_EEPROM_LOGO        // Uncommenting RECORD_EEPROM deactivates #define Use_MENU
+#define RECORD_EEPROM_LOGO        // Uncommenting RECORD_EEPROM deactivates #define Use_MENU
 #define LOAD_EEPROM_LOGO 
 
 // for list of logos, see filenames in "logos" folder, and remove the logo_ prefix from the filename

@@ -9,10 +9,10 @@
 #define AYPLAY
 #define MenuBLK2A
 #define ID11CDTspeedup
-#define DIRECT_RECORDING
+
 #define ZX81SPEEDUP
-//#define Use_MZF
-//#define Use_CAQ
+#define Use_MZF
+#define Use_CAQ
 #define tapORIC
     #define ORICSPEEDUP
 #define Use_CAS                           // .cas files playback on MSX / Dragon / CoCo Tandy computers
