@@ -13,6 +13,7 @@
 #define Use_MTX
 #define Use_CAQ
 #define Use_c64                         // Commodore C64/C16 .tap files with native C64-TAPE-RAW/C16-TAPE-RAW headers
+//#define c64_invert                    // invert Commodore C64/C16 .tap playback pulse polarity
 #define tapORIC
     #define ORICSPEEDUP
 #define Use_CAS                           // .cas files playback on MSX / Dragon / CoCo Tandy computers

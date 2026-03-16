@@ -10,6 +10,7 @@
 #define MenuBLK2A
 #define ID11CDTspeedup
 #define Use_c64                         // Commodore C64/C16 .tap files with native C64-TAPE-RAW/C16-TAPE-RAW headers
+//#define c64_invert                    // invert Commodore C64/C16 .tap playback pulse polarity
 //#define Use_Rec  for atmega 4808/4809
 #define Use_MTX
 #define ZX81SPEEDUP
