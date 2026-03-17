@@ -13,25 +13,6 @@ constexpr unsigned long LONG_PULSE_CHUNK_US = 50000UL;
 unsigned long longPulseRemaining = 0;
 #endif
 
-void write_output_level(const byte level) {
-#if defined(Use_c64) && defined(c64_invert)
-  if (currentID == BLOCKID::C64TAP) {
-    if (level == LOW) {
-      WRITE_HIGH;
-    } else {
-      WRITE_LOW;
-    }
-    return;
-  }
-#endif
-
-  if (level == LOW) {
-    WRITE_LOW;
-  } else {
-    WRITE_HIGH;
-  }
-}
-
 void swap_read_buffer_page() {
   volatile byte * tmp = readBuffer;
   readBuffer = writeBuffer;
@@ -59,7 +40,7 @@ volatile bool wasPauseBlock = false;
 void reset_output_state() {
   // not really part of the ISR, just part of the output
   pinState=LOW;
-  write_output_level(pinState);
+  WRITE_LOW;
   wasPauseBlock=false;
   isPauseBlock=false;
 #ifdef Use_c64
@@ -102,7 +83,10 @@ void wave2() {
       longPulseRemaining = (highWord << 16) | lowWord;
 
       pinState = !pinState;
-      write_output_level(pinState);
+      if (pinState == LOW)
+        WRITE_LOW;
+      else
+        WRITE_HIGH;
 
       newTime = (longPulseRemaining > LONG_PULSE_CHUNK_US) ? LONG_PULSE_CHUNK_US : longPulseRemaining;
       longPulseRemaining -= newTime;
@@ -122,7 +106,10 @@ void wave2() {
       //pinState = LOW;
       //WRITE_LOW;
       pinState = !pinState;
-      write_output_level(pinState);
+      if (pinState == LOW)
+        WRITE_LOW; 
+      else   
+        WRITE_HIGH;
      
       goto _next;
     }   
@@ -152,10 +139,10 @@ void wave2() {
     //
     if bitRead(workingPeriod, 7) {
       pinState = !LOW;
-      write_output_level(pinState);
+      WRITE_HIGH;
     } else {
       pinState = LOW;
-      write_output_level(pinState);
+      WRITE_LOW;
     }
     
     if (workingPeriod & 0x0700)
@@ -184,7 +171,10 @@ void wave2() {
   if (pauseFlipBit || !isPauseBlock)
     pinState = !pinState;
 
-  write_output_level(pinState);
+  if (pinState == LOW)
+    WRITE_LOW;    
+  else
+    WRITE_HIGH;
 
   if (isPauseBlock)
   {
