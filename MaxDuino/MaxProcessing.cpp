@@ -7,6 +7,9 @@
 #include "file_utils.h"
 #include "isr.h"
 #include "casProcessing.h"
+#ifdef Use_TRS80
+#include "trs80cas.h"
+#endif
 #include "buffer.h"
 #include "TimerCounter.h"
 #include "processing_state.h"
@@ -875,6 +878,12 @@ void TZXProcess() {
       #ifdef Use_MTX
         case BLOCKID::MTX:
           mtx_process();
+          break;
+      #endif
+
+      #if defined(Use_CAS) && defined(Use_TRS80)
+        case BLOCKID::TRS80CAS:
+          trs80cas_process();
           break;
       #endif
 

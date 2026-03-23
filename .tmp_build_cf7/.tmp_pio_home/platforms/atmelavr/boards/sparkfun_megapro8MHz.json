@@ -1,0 +1,28 @@
+{
+  "build": {
+    "core": "arduino",
+    "extra_flags": "-DARDUINO_AVR_MEGA2560",
+    "f_cpu": "8000000L",
+    "mcu": "atmega2560",
+    "variant": "mega"
+  },
+  "debug": {
+    "simavr_target": "atmega2560",
+    "avr-stub": {
+      "speed": 115200
+    }
+  },
+  "frameworks": [
+    "arduino"
+  ],
+  "name": "SparkFun Mega Pro 3.3V/8MHz",
+  "upload": {
+    "maximum_ram_size": 8192,
+    "maximum_size": 258048,
+    "protocol": "wiring",
+    "require_upload_port": true,
+    "speed": 57600
+  },
+  "url": "https://www.sparkfun.com/products/10744",
+  "vendor": "SparkFun"
+}

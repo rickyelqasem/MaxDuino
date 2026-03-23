@@ -1,0 +1,26 @@
+{
+  "build": {
+    "core": "MegaCore",
+    "extra_flags": "-DARDUINO_AVR_ATmega169P",
+    "f_cpu": "16000000L",
+    "mcu": "atmega169p",
+    "variant": "64-pin-avr"
+  },
+  "bootloader":{
+    "led_pin": "B5",
+    "uart0_pins": "uart0_rxe0_txe1"
+  },
+  "frameworks": [
+    "arduino"
+  ],
+  "name": "ATmega169/P/PA",
+  "upload": {
+    "maximum_ram_size": 1024,
+    "maximum_size": 16384,
+    "protocol": "urclock",
+    "require_upload_port": true,
+    "speed": 115200
+  },
+  "url": "https://www.microchip.com/wwwproducts/en/ATmega169P",
+  "vendor": "Microchip"
+}

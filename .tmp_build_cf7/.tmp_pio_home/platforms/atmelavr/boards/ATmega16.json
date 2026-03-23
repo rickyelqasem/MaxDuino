@@ -1,0 +1,29 @@
+{
+  "build": {
+    "core": "MightyCore",
+    "extra_flags": "-DARDUINO_AVR_ATmega16",
+    "f_cpu": "16000000L",
+    "mcu": "atmega16",
+    "variant": "standard"
+  },
+  "bootloader":{
+    "led_pin": "B0",
+    "uart0_pins": "uart0_rxd0_txd1"
+  },
+  "debug": {
+    "simavr_target": "atmega16"
+  },
+  "frameworks": [
+    "arduino"
+  ],
+  "name": "ATmega16",
+  "upload": {
+    "maximum_ram_size": 1024,
+    "maximum_size": 16384,
+    "protocol": "urclock",
+    "require_upload_port": true,
+    "speed": 115200
+  },
+  "url": "https://www.microchip.com/wwwproducts/en/ATmega16",
+  "vendor": "Microchip"
+}

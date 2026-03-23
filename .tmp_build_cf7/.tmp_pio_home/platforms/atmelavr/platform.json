@@ -1,0 +1,138 @@
+{
+  "name": "atmelavr",
+  "title": "Atmel AVR",
+  "description": "Atmel AVR 8-bit MCUs deliver a unique combination of performance, power efficiency and design flexibility. Optimized to speed time to market-and easily adapt to new ones-they are based on the industry's most code-efficient architecture for C and assembly programming",
+  "homepage": "http://www.atmel.com/products/microcontrollers/avr/default.aspx",
+  "license": "Apache-2.0",
+  "keywords": [
+      "dev-platform",
+      "Microchip",
+      "AVR",
+      "Atmel",
+      "8-bit"
+  ],
+  "engines": {
+    "platformio": "^6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/platformio/platform-atmelavr.git"
+  },
+  "version": "5.1.0",
+  "frameworks": {
+    "arduino": {
+      "package": "framework-arduino-avr",
+      "script": "builder/frameworks/arduino.py"
+    }
+  },
+  "packages": {
+    "toolchain-atmelavr": {
+      "type": "toolchain",
+      "owner": "platformio",
+      "version": "~1.70300.0"
+    },
+    "framework-arduino-avr": {
+      "type": "framework",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~5.2.0"
+    },
+    "framework-arduino-avr-attiny": {
+      "type": "framework",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~1.5.2"
+    },
+    "framework-arduino-avr-bean": {
+      "type": "framework",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~2.0.3"
+    },
+    "framework-arduino-avr-core13": {
+      "type": "framework",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~0.0.22"
+    },
+    "framework-arduino-avr-digistump": {
+      "type": "framework",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~1.7.2"
+    },
+    "framework-arduino-avr-dwenguino": {
+      "type": "framework",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~2.2.1"
+    },
+    "framework-arduino-avr-megacore": {
+      "type": "framework",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~3.0.2"
+    },
+    "framework-arduino-avr-mightycore": {
+      "type": "framework",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~3.0.2"
+    },
+    "framework-arduino-avr-minicore": {
+      "type": "framework",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~3.0.2"
+    },
+    "framework-arduino-avr-majorcore": {
+      "type": "framework",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~3.0.2"
+    },
+    "framework-arduino-avr-microcore": {
+      "type": "framework",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~2.4.0"
+    },
+    "framework-arduino-avr-nicai": {
+      "type": "framework",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~3.5.0"
+    },
+    "framework-arduino-avr-panstamp": {
+      "type": "framework",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~1.5.7"
+    },
+    "framework-arduino-avr-prusa_rambo": {
+      "type": "framework",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~1.0.3"
+    },
+    "tool-avrdude": {
+      "type": "uploader",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~1.60300.0",
+      "optionalVersions": ["~1.70200.0"]
+    },
+    "tool-micronucleus": {
+      "type": "uploader",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~1.250.0"
+    },
+    "tool-simavr": {
+      "type": "debugger",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~1.10700.0"
+    }
+  }
+}

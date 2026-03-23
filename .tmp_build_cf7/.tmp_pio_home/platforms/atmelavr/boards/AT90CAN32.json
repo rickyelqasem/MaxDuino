@@ -1,0 +1,27 @@
+{
+  "build": {
+    "core": "MegaCore",
+    "extra_flags": "-DARDUINO_AVR_AT90CAN32",
+    "f_cpu": "16000000L",
+    "mcu": "at90can32",
+    "variant": "64-pin-avr"
+  },
+  "bootloader":{
+    "led_pin": "B5",
+    "uart0_pins": "uart0_rxe0_txe1",
+    "uart1_pins": "uart1_rxd2_txd3"
+  },
+  "frameworks": [
+    "arduino"
+  ],
+  "name": "AT90CAN32",
+  "upload": {
+    "maximum_ram_size": 2048,
+    "maximum_size": 32768,
+    "protocol": "urclock",
+    "require_upload_port": true,
+    "speed": 115200
+  },
+  "url": "https://www.microchip.com/wwwproducts/AT90CAN32",
+  "vendor": "Microchip"
+}

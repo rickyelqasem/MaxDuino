@@ -1,0 +1,36 @@
+{
+  "build": {
+    "core": "arduino",
+    "extra_flags": "-DARDUINO_AVR_MEGA",
+    "f_cpu": "16000000L",
+    "mcu": "atmega1280",
+    "variant": "mega"
+  },
+  "bootloader": {
+    "efuse": "0xF5",
+    "file": "atmega/ATmegaBOOT_168_atmega1280.hex",
+    "hfuse": "0xDA",
+    "lock_bits": "0x0F",
+    "lfuse": "0xFF",
+    "unlock_bits": "0x3F"
+  },
+  "debug": {
+    "simavr_target": "atmega1280",
+    "avr-stub": {
+      "speed": 115200
+    }
+  },
+  "frameworks": [
+    "arduino"
+  ],
+  "name": "Arduino Mega or Mega 2560 ATmega1280",
+  "upload": {
+    "maximum_ram_size": 8192,
+    "maximum_size": 126976,
+    "protocol": "arduino",
+    "require_upload_port": true,
+    "speed": 57600
+  },
+  "url": "https://www.arduino.cc/en/Main/ArduinoBoardMega2560",
+  "vendor": "Arduino"
+}

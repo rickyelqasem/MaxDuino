@@ -1,0 +1,35 @@
+{
+  "build": {
+    "core": "MegaCore",
+    "extra_flags": "-DARDUINO_AVR_ATmega2560",
+    "f_cpu": "16000000L",
+    "mcu": "atmega2560",
+    "variant": "100-pin-arduino-mega"
+  },
+  "bootloader": {
+    "led_pin": "B7",
+    "uart0_pins": "uart0_rxe0_txe1",
+    "uart1_pins": "uart1_rxd2_txd3",
+    "uart2_pins": "uart2_rxh0_txh1",
+    "uart3_pins": "uart3_rxj0_txj1"
+  },
+  "debug": {
+    "simavr_target": "atmega2560",
+    "avr-stub": {
+      "speed": 115200
+    }
+  },
+  "frameworks": [
+    "arduino"
+  ],
+  "name": "ATmega2560",
+  "upload": {
+    "maximum_ram_size": 8192,
+    "maximum_size": 262144,
+    "protocol": "urclock",
+    "require_upload_port": true,
+    "speed": 115200
+  },
+  "url": "https://www.microchip.com/wwwproducts/ATmega2560",
+  "vendor": "Microchip"
+}

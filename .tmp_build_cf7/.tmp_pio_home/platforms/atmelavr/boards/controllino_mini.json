@@ -1,0 +1,42 @@
+{
+  "build": {
+    "core": "arduino",
+    "extra_flags": "-DARDUINO_AVR_UNO",
+    "f_cpu": "16000000L",
+    "hwids": [
+      [
+        "0x2341",
+        "0x0043"
+      ],
+      [
+        "0x2341",
+        "0x0001"
+      ],
+      [
+        "0x2A03",
+        "0x0043"
+      ]
+    ],
+    "mcu": "atmega328p",
+    "variant": "Controllino_mini"
+  },
+  "debug": {
+    "simavr_target": "atmega328p",
+    "avr-stub": {
+      "speed": 115200
+    }
+  },
+  "frameworks": [
+    "arduino"
+  ],
+  "name": "Controllino Mini",
+  "upload": {
+    "maximum_ram_size": 2048,
+    "maximum_size": 32256,
+    "protocol": "arduino",
+    "require_upload_port": true,
+    "speed": 115200
+  },
+  "url": "https://www.controllino.com/product/controllino-mini/",
+  "vendor": "Controllino"
+}

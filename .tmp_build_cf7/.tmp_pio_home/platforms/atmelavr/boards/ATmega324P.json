@@ -1,0 +1,30 @@
+{
+  "build": {
+    "core": "MightyCore",
+    "extra_flags": "-DARDUINO_AVR_ATmega324",
+    "f_cpu": "16000000L",
+    "mcu": "atmega324p",
+    "variant": "standard"
+  },
+  "bootloader":{
+    "led_pin": "B0",
+    "uart0_pins": "uart0_rxd0_txd1",
+    "uart1_pins": "uart1_rxd2_txd3"
+  },
+  "debug": {
+    "simavr_target": "atmega324p"
+  },
+  "frameworks": [
+    "arduino"
+  ],
+  "name": "ATmega324P",
+  "upload": {
+    "maximum_ram_size": 2048,
+    "maximum_size": 32768,
+    "protocol": "urclock",
+    "require_upload_port": true,
+    "speed": 115200
+  },
+  "url": "https://www.microchip.com/wwwproducts/en/ATmega324p",
+  "vendor": "Microchip"
+}

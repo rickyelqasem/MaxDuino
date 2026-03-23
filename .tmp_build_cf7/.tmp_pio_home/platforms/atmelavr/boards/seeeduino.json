@@ -1,0 +1,34 @@
+{
+  "build": {
+    "core": "arduino",
+    "extra_flags": "-DARDUINO_AVR_SEEEDUINO",
+    "f_cpu": "16000000L",
+    "hwids": [
+      [
+        "0x2886",
+        "0x0004"
+      ]
+    ],
+    "mcu": "atmega328p",
+    "variant": "standard"
+  },
+  "debug": {
+    "simavr_target": "atmega328p",
+    "avr-stub": {
+      "speed": 115200
+    }
+  },
+  "frameworks": [
+    "arduino"
+  ],
+  "name": "Seeeduino",
+  "upload": {
+    "maximum_ram_size": 2048,
+    "maximum_size": 32256,
+    "protocol": "arduino",
+    "require_upload_port": true,
+    "speed": 115200
+  },
+  "url": "https://www.seeedstudio.com/Seeeduino-V4.2-p-2517.html",
+  "vendor": "SeeedStudio"
+}

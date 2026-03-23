@@ -1,0 +1,28 @@
+{
+  "build": {
+    "core": "arduino",
+    "extra_flags": "-DARDUINO_AVR_MINIWIRELESS",
+    "f_cpu": "16000000L",
+    "mcu": "atmega328p",
+    "variant": "standard"
+  },
+  "debug": {
+    "simavr_target": "atmega328p",
+    "avr-stub": {
+      "speed": 115200
+    }
+  },
+  "frameworks": [
+    "arduino"
+  ],
+  "name": "Anarduino MiniWireless",
+  "upload": {
+    "maximum_ram_size": 2048,
+    "maximum_size": 32256,
+    "protocol": "arduino",
+    "require_upload_port": true,
+    "speed": 57600
+  },
+  "url": "http://www.anarduino.com/miniwireless/",
+  "vendor": "Anarduino"
+}

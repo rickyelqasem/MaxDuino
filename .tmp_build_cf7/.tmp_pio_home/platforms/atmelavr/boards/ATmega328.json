@@ -1,0 +1,32 @@
+{
+  "build": {
+    "core": "MiniCore",
+    "extra_flags": "-DARDUINO_AVR_ATmega328",
+    "f_cpu": "16000000L",
+    "mcu": "atmega328",
+    "variant": "standard"
+  },
+  "bootloader": {
+    "led_pin": "B5",
+    "uart0_pins": "uart0_rxd0_txd1"
+  },
+  "debug": {
+    "simavr_target": "atmega328",
+    "avr-stub": {
+      "speed": 115200
+    }
+  },
+  "frameworks": [
+    "arduino"
+  ],
+  "name": "ATmega328",
+  "upload": {
+    "maximum_ram_size": 2048,
+    "maximum_size": 32768,
+    "protocol": "urclock",
+    "require_upload_port": true,
+    "speed": 115200
+  },
+  "url": "https://www.microchip.com/wwwproducts/en/ATmega328",
+  "vendor": "Microchip"
+}
