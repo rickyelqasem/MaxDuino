@@ -22,10 +22,10 @@ enum class TRS80Mode : uint8_t {
 };
 
 static TRS80Mode trs80_mode = TRS80Mode::NONE;
-static unsigned long trs80_payload_start = 0;
+static uint16_t trs80_payload_start = 0;
 static bool trs80_sent_direct_header = false;
-static uint32_t trs80_leading_silence = 0;
-static uint32_t trs80_trailing_silence = 0;
+static uint16_t trs80_leading_silence = 0;
+static uint16_t trs80_trailing_silence = 0;
 static byte trs80_current_byte = 0;
 static uint8_t trs80_bit_mask = 0;
 static uint8_t trs80_current_bit_value = 0;
@@ -34,14 +34,15 @@ static uint16_t trs80_low_half_pos = 0;
 static uint16_t trs80_low_half_samples = 0;
 static uint8_t trs80_high_phase = 0;
 static uint16_t trs80_high_remaining = 0;
-static double trs80_frac_error = 0.0;
+static uint16_t trs80_frac_error = 0;
 static bool trs80_eof = false;
 
 static constexpr uint16_t TRS80_SAMPLE_US = 45; // ~= 22.05 kHz direct sample clock
-static constexpr uint32_t TRS80_SILENCE_SAMPLES = 11025; // 0.5s at 22050 Hz
-static constexpr double TRS80_CLOCK_HZ = 2027520.0;
+static constexpr uint16_t TRS80_SILENCE_SAMPLES = 11025; // 0.5s at 22050 Hz
+static constexpr uint16_t TRS80_SAMPLES_NUM = 245;   // 22050 / gcd(22050, 2027520)
+static constexpr uint16_t TRS80_SAMPLES_DEN = 22528; // 2027520 / gcd(22050, 2027520)
 static constexpr byte TRS80_MARKER_PROBE_LEN = 20;
-static constexpr unsigned long TRS80_RAW_SCAN_LIMIT = 512;
+static constexpr uint16_t TRS80_RAW_SCAN_LIMIT = 512;
 
 static void reset_byte_state();
 
@@ -82,9 +83,9 @@ static bool parse_marker(const char *s, TRS80Mode &mode, size_t &marker_len) {
   return false;
 }
 
-static bool find_raw_sync(unsigned long &sync_offset) {
-  const unsigned long limit = (filesize < TRS80_RAW_SCAN_LIMIT) ? filesize : TRS80_RAW_SCAN_LIMIT;
-  unsigned long offset = 0;
+static bool find_raw_sync(uint16_t &sync_offset) {
+  const uint16_t limit = (filesize < TRS80_RAW_SCAN_LIMIT) ? (uint16_t)filesize : TRS80_RAW_SCAN_LIMIT;
+  uint16_t offset = 0;
 
   while (offset < limit) {
     if (readfile(1, offset) != 1) {
@@ -106,8 +107,8 @@ static bool find_raw_sync(unsigned long &sync_offset) {
   return true;
 }
 
-static bool detect_raw_mode(TRS80Mode &mode, unsigned long &payload_start) {
-  unsigned long sync_offset = 0;
+static bool detect_raw_mode(TRS80Mode &mode, uint16_t &payload_start) {
+  uint16_t sync_offset = 0;
   if (!find_raw_sync(sync_offset)) {
     return false;
   }
@@ -171,13 +172,13 @@ static bool detect_raw_mode(TRS80Mode &mode, unsigned long &payload_start) {
   return false;
 }
 
-static bool init_mode(TRS80Mode mode, unsigned long payload_start) {
+static bool init_mode(TRS80Mode mode, uint16_t payload_start) {
   trs80_mode = mode;
   trs80_payload_start = payload_start;
   trs80_sent_direct_header = false;
   trs80_leading_silence = TRS80_SILENCE_SAMPLES;
   trs80_trailing_silence = TRS80_SILENCE_SAMPLES;
-  trs80_frac_error = 0.0;
+  trs80_frac_error = 0;
   trs80_eof = false;
   bytesRead = trs80_payload_start;
   reset_byte_state();
@@ -206,18 +207,14 @@ static bool init_mode(TRS80Mode mode, unsigned long payload_start) {
   return true;
 }
 
-static int duration_to_samples(double seconds) {
-  double exact = seconds * 22050.0 + trs80_frac_error;
-  int whole = (int) exact;
-  trs80_frac_error = exact - whole;
-  if (whole < 1) {
-    whole = 1;
+static uint16_t tcycles_to_samples(uint16_t tcycles) {
+  uint32_t scaled = (uint32_t)tcycles * TRS80_SAMPLES_NUM + trs80_frac_error;
+  uint16_t whole = (uint16_t)(scaled / TRS80_SAMPLES_DEN);
+  trs80_frac_error = (uint16_t)(scaled - (uint32_t)whole * TRS80_SAMPLES_DEN);
+  if (whole == 0) {
+    return 1;
   }
   return whole;
-}
-
-static int tcycles_to_samples(int tcycles) {
-  return duration_to_samples((double)tcycles / TRS80_CLOCK_HZ);
 }
 
 static void reset_byte_state() {
@@ -360,7 +357,7 @@ bool trs80cas_detect_and_init() {
 
   TRS80Mode mode = TRS80Mode::NONE;
   size_t marker_len = 0;
-  unsigned long payload_start = 0;
+  uint16_t payload_start = 0;
 
   if (parse_marker(hdr, mode, marker_len)) {
     payload_start = marker_len;

@@ -459,7 +459,7 @@ void TZXProcess() {
       tzx_process_taskid_uef_processchunkid();
       break;
 #endif // Use_UEF
-    
+
     case TASK::GETID:
       //grab 1 byte ID
       if(ReadByte()) {
