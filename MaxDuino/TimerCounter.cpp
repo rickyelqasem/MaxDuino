@@ -95,8 +95,11 @@ class HwTimerCounter:public HardwareTimer
 
 #define TIMER_CHANNEL 2 // channel 2
 HwTimerCounter timer_instance(TIMER_CHANNEL);
+static unsigned long currentMicroseconds;
 
-TimerCounter::TimerCounter() {};
+TimerCounter::TimerCounter() {
+  currentMicroseconds = 0;
+};
 void TimerCounter::stop()
 {
   timer_instance.pause();
@@ -105,11 +108,17 @@ void TimerCounter::stop()
 void TimerCounter::initialize(unsigned long period)
 {
   // behaviour of other timers is to set period
+  currentMicroseconds = 0;
   setPeriod(period);  
 }
 
 void TimerCounter::setPeriod(unsigned long period)
 {
+  if (currentMicroseconds == period) {
+    return;
+  }
+
+  currentMicroseconds = period;
   timer_instance.setSTM32Period(period);
 }
 
@@ -258,15 +267,27 @@ ISR(TCA0_OVF_vect)
 
 #define TIMER1_RESOLUTION 65536UL  // Timer1 is 16 bit
 
-TimerCounter::TimerCounter(){};
+static unsigned long currentMicroseconds;
+
+TimerCounter::TimerCounter(){
+    currentMicroseconds = 0;
+}
 
 void TimerCounter::initialize(unsigned long microseconds) {
     TCCR1B = _BV(WGM13);        // set mode as phase and frequency correct pwm, stop the timer
     TCCR1A = 0;                 // clear control register A 
+    currentMicroseconds = 0;
     setPeriod(microseconds);
 }
 
 void TimerCounter::setPeriod(unsigned long microseconds) {
+    if (currentMicroseconds == microseconds) {
+        // Direct-recording paths repeatedly request the same short period.
+        // Timer1 will keep retriggering without being reprogrammed.
+        return;
+    }
+
+    currentMicroseconds = microseconds;
     const unsigned long cycles = (F_CPU / 2000000) * microseconds;
     unsigned short pwmPeriod;
     unsigned char clockSelectBits;
@@ -557,26 +578,34 @@ void ARDUINO_ISR_ATTR onTimer(){
 }
 
 hw_timer_t * timer = NULL;
+static unsigned long currentMicroseconds;
 
 TimerCounter::TimerCounter()
 {
   isrCallback = NULL;
+  currentMicroseconds = 0;
 }
 
 void TimerCounter::initialize(unsigned long microseconds=1000000)
 {
   isrCallback = NULL;
+  currentMicroseconds = 0;
   if (timer==NULL)
   {
     // count microseconds - so divide CPU freq in Hz by 1e6
     timer = timerBegin(0, F_CPU/1000000, true);
     timerAttachInterrupt(timer, &onTimer, true);
-    timerAlarmWrite(timer, microseconds, true);
   }
+  setPeriod(microseconds);
 }
 
 void TimerCounter::setPeriod(unsigned long microseconds)
 {
+  if (currentMicroseconds == microseconds) {
+    return;
+  }
+
+  currentMicroseconds = microseconds;
   timerAlarmWrite(timer, microseconds, true);
 }
 
@@ -600,14 +629,18 @@ void IRAM_ATTR onTimer(){
     (*isrCallback)();
 }
 
+static unsigned long currentMicroseconds;
+
 TimerCounter::TimerCounter()
 {
   isrCallback = NULL;
+  currentMicroseconds = 0;
 }
 
 void TimerCounter::initialize(unsigned long microseconds=1000000)
 {
   isrCallback = NULL;
+  currentMicroseconds = 0;
   // Divide CPU freq in Hz (e.g. 80000000) by 1e6 (=> 80) to determine how many ticks per microsecond
   // DIV16 to reduce this by a factor of 16
   // ESP8266 timer1 is only 23 bits
@@ -615,12 +648,17 @@ void TimerCounter::initialize(unsigned long microseconds=1000000)
   // (which is less than 2^23 i.e. 8338608)
   timer1_isr_init();
   timer1_attachInterrupt(onTimer);
-  timer1_write(microseconds*((F_CPU/1000000)/16));
   timer1_enable(TIM_DIV16, TIM_EDGE, TIM_LOOP);
+  setPeriod(microseconds);
 }
 
 void TimerCounter::setPeriod(unsigned long microseconds)
 {
+  if (currentMicroseconds == microseconds) {
+    return;
+  }
+
+  currentMicroseconds = microseconds;
   timer1_write(microseconds*((F_CPU/1000000)/16));
   // timer1_write also (re)enables edge interrupts
 }
